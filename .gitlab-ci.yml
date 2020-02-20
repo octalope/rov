@@ -1,0 +1,29 @@
+image: node:latest
+
+cache:
+  paths:
+    - node_modules/
+
+test:
+  when: manual
+  script:
+   - npm install
+   - npm test
+  artifacts:
+    paths:
+    - coverage
+    expire_in: 1 week
+
+pages:
+  when: manual
+  stage: deploy
+  dependencies:
+    - test
+  script:
+    - mv coverage/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - master
